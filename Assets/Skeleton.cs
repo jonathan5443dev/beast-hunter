@@ -7,7 +7,6 @@ public class Skeleton : MonoBehaviour {
     Rigidbody2D rigidBody;
     Animator anim;
 
-    // Constructor
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator> ();
