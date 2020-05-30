@@ -21,10 +21,11 @@ public class hero : MonoBehaviour {
         vel.x = v;
         rigidBody.velocity = vel;
         if (v != 0) {
+            anim.ResetTrigger ("idle");
             anim.SetTrigger ("walk");
         } else {
+            anim.ResetTrigger ("walk");
             anim.SetTrigger ("idle");
-
         }
         if (walkingRight && v < 0) {
             walkingRight = false;

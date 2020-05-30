@@ -921,7 +921,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160339761}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.012, y: -0.4, z: 0}
+  m_LocalPosition: {x: -0.012, y: -0.372, z: 0}
   m_LocalScale: {x: 1.3627373, y: 1.2159501, z: 1.0963863}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1048,6 +1048,7 @@ GameObject:
   - component: {fileID: 1345439127}
   - component: {fileID: 1345439126}
   - component: {fileID: 1345439128}
+  - component: {fileID: 1345439129}
   m_Layer: 0
   m_Name: hero
   m_TagString: Untagged
@@ -1186,6 +1187,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1345439129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345439123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67dd02b8072684f40ad1762e627d9957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1560024625
 PrefabInstance:
   m_ObjectHideFlags: 0
