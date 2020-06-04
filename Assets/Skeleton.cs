@@ -1,15 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Skeleton : MonoBehaviour {
     public float speed = -1f;
     Rigidbody2D rigidBody;
     Animator anim;
 
+    public Slider slider;
+    public Text txt;
+
+    public float energy = 100;
+
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator> ();
+    }
+
+    void Update () {
+        slider.value = energy;
+        txt.text = energy.ToString ();
     }
 
     // Run every frame

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class hero : MonoBehaviour {
     Rigidbody2D rigidBody;
@@ -8,9 +9,19 @@ public class hero : MonoBehaviour {
     float maxVel = 1.2f;
     bool walkingRight = true;
 
+    public Slider slider;
+    public Text txt;
+
+    public float energy = 100;
+
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator> ();
+    }
+
+    void Update () {
+        slider.value = energy;
+        txt.text = energy.ToString ();
     }
 
     // Run every frame
