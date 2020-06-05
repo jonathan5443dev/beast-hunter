@@ -20,6 +20,9 @@ public class hero : MonoBehaviour {
     }
 
     void Update () {
+        if (System.Math.Abs (Input.GetAxis ("Fire2")) > 0.1f) {
+            anim.SetTrigger ("attack");
+        }
         slider.value = energy;
         txt.text = energy.ToString ();
     }
