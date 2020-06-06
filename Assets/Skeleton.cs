@@ -16,6 +16,7 @@ public class Skeleton : MonoBehaviour {
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
         anim = GetComponent<Animator> ();
+        rigidBody.freezeRotation = true;
     }
 
     void Update () {
@@ -41,7 +42,7 @@ public class Skeleton : MonoBehaviour {
         transform.localScale = scale;
     }
 
-    // Change animations states
+    // Change animation states
     void setAnimationState () {
         bool isWalking = anim.GetCurrentAnimatorStateInfo (0).IsName ("skeleton_walking");
         bool shouldIdle = Random.value < 1f / (60f * 3f);

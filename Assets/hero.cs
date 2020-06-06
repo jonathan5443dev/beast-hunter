@@ -4,18 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class hero : MonoBehaviour {
-    Rigidbody2D rigidBody;
     Animator anim;
-    float maxVel = 1.2f;
-    bool walkingRight = true;
-
-    public Slider slider;
     public Text txt;
-
+    float maxVel = 1.2f;
+    public Slider slider;
+    Rigidbody2D rigidBody;
+    bool walkingRight = true;
     public float energy = 100;
+    BoxCollider2D boxCollider;
 
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
+        boxCollider = GetComponent<BoxCollider2D> ();
         anim = GetComponent<Animator> ();
     }
 
@@ -29,22 +29,35 @@ public class hero : MonoBehaviour {
 
     // Run every frame
     void FixedUpdate () {
-        float v = Input.GetAxis ("Horizontal");
-        Vector2 vel = new Vector2 (0, rigidBody.velocity.y);
-        v *= maxVel;
-        vel.x = v;
-        rigidBody.velocity = vel;
-        if (v != 0) {
-            anim.ResetTrigger ("idle");
+        if (isGrounded ()) {
+            setAnimationState ();
+        }
+    }
+
+    // Change animation states
+    void setAnimationState () {
+        float horizontalMovement = Input.GetAxis ("Horizontal");
+        float verticalMovement = Input.GetAxis ("Vertical");
+        Vector2 vel = new Vector2 (0, 0);
+        if (horizontalMovement != 0) {
+            horizontalMovement *= maxVel;
+            vel.x = horizontalMovement;
+            rigidBody.velocity = vel;
             anim.SetTrigger ("walk");
         } else {
-            anim.ResetTrigger ("walk");
-            anim.SetTrigger ("idle");
+            if (verticalMovement < 0) {
+                vel.y = 4;
+                rigidBody.velocity = vel;
+                anim.SetTrigger ("jump");
+
+            } else {
+                anim.SetTrigger ("idle");
+            }
         }
-        if (walkingRight && v < 0) {
+        if (walkingRight && horizontalMovement < 0) {
             walkingRight = false;
             Flip ();
-        } else if (!walkingRight && v > 0) {
+        } else if (!walkingRight && horizontalMovement > 0) {
             walkingRight = true;
             Flip ();
         }
@@ -55,5 +68,10 @@ public class hero : MonoBehaviour {
         var s = transform.localScale;
         s.x *= -1;
         transform.localScale = s;
+    }
+
+    // Check if the hero is grounded
+    bool isGrounded () {
+        return transform.Find ("GroundCheck").GetComponent<GroundCheck> ().isGrounded;
     }
 }
