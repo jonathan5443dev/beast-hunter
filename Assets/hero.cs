@@ -12,6 +12,7 @@ public class hero : MonoBehaviour {
     bool walkingRight = true;
     public float energy = 100;
     BoxCollider2D boxCollider;
+    PowerUp powerUp;
 
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
@@ -23,6 +24,9 @@ public class hero : MonoBehaviour {
         if (System.Math.Abs (Input.GetAxis ("Fire2")) > 0.1f) {
             anim.SetTrigger ("attack");
         }
+        if (powerUp != null) {
+            powerUp.Grab ();
+        }
         slider.value = energy;
         txt.text = energy.ToString ();
     }
@@ -32,6 +36,18 @@ public class hero : MonoBehaviour {
         if (isGrounded ()) {
             setAnimationState ();
         }
+    }
+
+    // Collision 
+    private void OnTriggerStay2D (Collider2D collider) {
+        if (collider.gameObject.name.Equals ("shield")) {
+            powerUp = collider.gameObject.GetComponent<PowerUp> ();
+        }
+    }
+
+    // Collision exit
+    private void OnTriggerExit2D (Collider2D other) {
+        powerUp = null;
     }
 
     // Change animation states
@@ -45,7 +61,7 @@ public class hero : MonoBehaviour {
             rigidBody.velocity = vel;
             anim.SetTrigger ("walk");
         } else {
-            if (verticalMovement < 0) {
+            if (verticalMovement > 0) {
                 vel.y = 4;
                 rigidBody.velocity = vel;
                 anim.SetTrigger ("jump");
