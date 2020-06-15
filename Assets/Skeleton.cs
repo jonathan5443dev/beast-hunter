@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Skeleton : MonoBehaviour {
-    public float speed = -1f;
     Rigidbody2D rigidBody;
     Animator anim;
 
+    public float speed = -1f;
     public Slider slider;
     public Text txt;
 
@@ -20,18 +20,36 @@ public class Skeleton : MonoBehaviour {
     }
 
     void Update () {
+        if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("skeleton_death")) {
+            if (energy <= 0) {
+                energy = 0;
+                anim.SetTrigger ("death");
+            }
+        } else {
+            return;
+        }
         slider.value = energy;
         txt.text = energy.ToString ();
     }
 
     // Run every frame
     void FixedUpdate () {
-        setAnimationState ();
+        SetAnimationState ();
     }
 
     // Trigger limits collision
-    void OnTriggerEnter2D (Collider2D col) {
+    void OnTriggerEnter2D (Collider2D other) {
         Flip ();
+        if (other.gameObject.name.Equals ("hero")) {
+            if (anim.GetCurrentAnimatorStateInfo (0).IsName ("skeleton_atack")) {
+                hero hero = other.gameObject.GetComponent<hero> ();
+                if (hero != null) hero.ReceiveDamage ();
+            }
+        }
+    }
+
+    public void ReceiveDamage () {
+        energy -= 10;
     }
 
     // Change x direction
@@ -43,7 +61,7 @@ public class Skeleton : MonoBehaviour {
     }
 
     // Change animation states
-    void setAnimationState () {
+    void SetAnimationState () {
         bool isWalking = anim.GetCurrentAnimatorStateInfo (0).IsName ("skeleton_walking");
         bool shouldIdle = Random.value < 1f / (60f * 3f);
         if (isWalking) {

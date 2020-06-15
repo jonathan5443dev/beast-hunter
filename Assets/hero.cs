@@ -4,15 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class hero : MonoBehaviour {
-    Animator anim;
-    public Text txt;
-    float maxVel = 1.2f;
-    public Slider slider;
-    Rigidbody2D rigidBody;
-    bool walkingRight = true;
-    public float energy = 100;
     BoxCollider2D boxCollider;
+    Rigidbody2D rigidBody;
     PowerUp powerUp;
+    Animator anim;
+
+    public float energy = 100;
+    public Slider slider;
+    public Text txt;
+
+    bool walkingRight = true;
+    float maxVel = 1.2f;
 
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
@@ -22,6 +24,14 @@ public class hero : MonoBehaviour {
     }
 
     void Update () {
+        if (!anim.GetCurrentAnimatorStateInfo (0).IsName ("hero_death")) {
+            if (energy <= 0) {
+                energy = 0;
+                anim.SetTrigger ("death");
+            }
+        } else {
+            return;
+        }
         if (System.Math.Abs (Input.GetAxis ("Fire2")) > 0.1f) {
             anim.SetTrigger ("attack");
         } else {
@@ -37,14 +47,20 @@ public class hero : MonoBehaviour {
     // Run every frame
     void FixedUpdate () {
         if (isGrounded ()) {
-            setAnimationState ();
+            SetAnimationState ();
         }
     }
 
     // Collision 
-    private void OnTriggerStay2D (Collider2D collider) {
-        if (collider.gameObject.name.Equals ("shield")) {
-            powerUp = collider.gameObject.GetComponent<PowerUp> ();
+    private void OnTriggerEnter2D (Collider2D other) {
+        if (other.gameObject.name.Equals ("shield")) {
+            powerUp = other.gameObject.GetComponent<PowerUp> ();
+        }
+        if (other.gameObject.name.Equals ("skeleton")) {
+            if (anim.GetCurrentAnimatorStateInfo (0).IsName ("hero_attack")) {
+                Skeleton enemy = other.gameObject.GetComponent<Skeleton> ();
+                if (enemy != null) enemy.ReceiveDamage ();
+            }
         }
     }
 
@@ -54,7 +70,7 @@ public class hero : MonoBehaviour {
     }
 
     // Change animation states
-    void setAnimationState () {
+    void SetAnimationState () {
         float horizontalMovement = Input.GetAxis ("Horizontal");
         float verticalMovement = Input.GetAxis ("Vertical");
         Vector2 vel = new Vector2 (0, 0);
@@ -87,6 +103,10 @@ public class hero : MonoBehaviour {
             walkingRight = true;
             Flip ();
         }
+    }
+
+    public void ReceiveDamage () {
+        energy -= 10;
     }
 
     // Change x direction
