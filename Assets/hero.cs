@@ -18,11 +18,14 @@ public class hero : MonoBehaviour {
         rigidBody = GetComponent<Rigidbody2D> ();
         boxCollider = GetComponent<BoxCollider2D> ();
         anim = GetComponent<Animator> ();
+        rigidBody.freezeRotation = true;
     }
 
     void Update () {
         if (System.Math.Abs (Input.GetAxis ("Fire2")) > 0.1f) {
             anim.SetTrigger ("attack");
+        } else {
+            anim.ResetTrigger ("attack");
         }
         if (powerUp != null) {
             powerUp.Grab ();
@@ -55,18 +58,25 @@ public class hero : MonoBehaviour {
         float horizontalMovement = Input.GetAxis ("Horizontal");
         float verticalMovement = Input.GetAxis ("Vertical");
         Vector2 vel = new Vector2 (0, 0);
+        if (horizontalMovement != 0 && verticalMovement > 0) {
+            horizontalMovement *= maxVel;
+            vel.x = horizontalMovement;
+            vel.y = 4;
+            anim.SetTrigger ("jump");
+        }
         if (horizontalMovement != 0) {
             horizontalMovement *= maxVel;
             vel.x = horizontalMovement;
             rigidBody.velocity = vel;
+            anim.ResetTrigger ("idle");
             anim.SetTrigger ("walk");
         } else {
             if (verticalMovement > 0) {
                 vel.y = 4;
                 rigidBody.velocity = vel;
                 anim.SetTrigger ("jump");
-
             } else {
+                anim.ResetTrigger ("walk");
                 anim.SetTrigger ("idle");
             }
         }
